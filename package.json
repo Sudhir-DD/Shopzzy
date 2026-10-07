@@ -1,0 +1,27 @@
+{
+  "name": "shopping-cart",
+  "version": "1.0.0",
+  "description": "Shopping cart demo app (Express + EJS + SQLite)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build:bg": "node client/build.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "@react-three/fiber": "8.18.0",
+    "@shadergradient/react": "2.4.20",
+    "esbuild": "0.28.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "three": "0.169.0"
+  }
+}

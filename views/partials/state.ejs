@@ -1,0 +1,36 @@
+<%
+    // Mascot state card (errors, empty states), after the Shopzy design board:
+    // include('partials/state', {
+    //     mood: 'sad', accent: '404 –', title: 'Page Not Found', text: '...', note: '...',
+    //     prop: 'cart', deco: '404', heading: 'h1',
+    //     actions: [{ label: 'Go Back Home', href: '/', attrs: 'data-...' }]
+    // })
+    var sMood = typeof mood !== 'undefined' ? mood : 'neutral';
+    var sAccent = typeof accent !== 'undefined' ? accent : '';
+    var sNote = typeof note !== 'undefined' ? note : '';
+    var sProp = typeof prop !== 'undefined' ? prop : '';
+    var sDeco = typeof deco !== 'undefined' ? deco : '';
+    var sHeading = typeof heading !== 'undefined' ? heading : 'h2';
+    var sActions = typeof actions !== 'undefined' ? actions : [];
+%>
+<section class="state-card">
+    <div class="state-copy">
+        <<%= sHeading %> class="state-title"><% if (sAccent) { %><span class="state-accent"><%= sAccent %></span> <% } %><%= title %></<%= sHeading %>>
+        <p class="state-text"><%= text %></p>
+        <% if (sNote) { %><p class="state-note"><%= sNote %></p><% } %>
+
+        <% if (sActions.length) { %>
+            <div class="state-actions">
+                <% sActions.forEach(function (a) { %>
+                    <a class="btn btn-neon" href="<%= a.href || '#' %>" <%- a.attrs || '' %>><%= a.label %><%- include('icon', { icon: 'chevronRight', size: 16 }) %></a>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+
+    <div class="state-art" aria-hidden="true">
+        <% if (sDeco) { %><span class="state-deco"><%= sDeco %></span><% } %>
+        <%- include('mascot', { mood: sMood, size: 190 }) %>
+        <% if (sProp) { %><span class="state-prop"><%- include('icon', { icon: sProp, size: 58 }) %></span><% } %>
+    </div>
+</section>

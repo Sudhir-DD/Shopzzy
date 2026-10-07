@@ -1,0 +1,140 @@
+<%- include('partials/head', { title: 'Shopzy - Smart Price Alerts, Price History & AI Predictions' }) %>
+<%- include('partials/header') %>
+<%
+    var heroStats = typeof stats !== 'undefined' ? stats : null;
+    var heroSpot = typeof spotlight !== 'undefined' ? spotlight : null;
+%>
+
+<main class="page-wrap page-wide">
+    <section class="hero">
+        <div class="hero-copy">
+            <span class="eyebrow"><%- include('partials/icon', { icon: 'sparkle', size: 14 }) %> AI-Powered Price Tracking</span>
+            <h1>Shop smarter,<br><span class="text-gradient">not pricier.</span></h1>
+            <p class="hero-lead">Track every price, set the amount you want to pay, and let AI tell you the best moment to buy.</p>
+
+            <div class="hero-cta">
+                <a class="btn btn-primary btn-lg btn-link" href="#categories">Start shopping <%- include('partials/icon', { icon: 'arrowRight', size: 18 }) %></a>
+                <a class="btn btn-outline btn-lg btn-link" href="/price-alerts">My Price Alerts</a>
+            </div>
+
+            <% if (heroStats) { %>
+                <div class="hero-stats">
+                    <div><strong><%= heroStats.products %></strong><span>products tracked</span></div>
+                    <div><strong><%= heroStats.categories %></strong><span>categories</span></div>
+                    <div><strong><%= heroStats.dropping %></strong><span>cheaper than 30 days ago</span></div>
+                </div>
+            <% } %>
+        </div>
+
+        <% if (heroSpot) { %>
+            <a class="hero-visual" href="/product/<%= heroSpot.id %>" aria-label="View <%= heroSpot.name %>">
+                <div class="spotlight-card stage-card">
+                    <div class="spotlight-top">
+                        <div>
+                            <span class="spotlight-label">Today's Spotlight</span>
+                            <div class="spotlight-name"><%= heroSpot.name %></div>
+                        </div>
+                        <span class="round-btn round-btn-light" aria-hidden="true"><%- include('partials/icon', { icon: 'arrowUpRight', size: 18 }) %></span>
+                    </div>
+
+                    <div class="spotlight-media"><img src="/<%= heroSpot.image %>" alt="<%= heroSpot.name %>"></div>
+
+                    <svg class="spark spotlight-spark" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true">
+                        <polyline class="spark-line <%= heroSpot.change30Pct <= 0 ? 'down' : 'up' %>" points="<%= heroSpot.spark %>"></polyline>
+                    </svg>
+
+                    <div class="spotlight-bottom">
+                        <div>
+                            <div class="spotlight-price">₹<%= heroSpot.price.toLocaleString('en-IN') %></div>
+                            <% if (heroSpot.change30Pct < 0) { %>
+                                <span class="delta-pill delta-down">▼ <%= Math.abs(heroSpot.change30Pct).toFixed(1) %>% in 30 days</span>
+                            <% } %>
+                        </div>
+                        <span class="btn btn-dark">View deal</span>
+                    </div>
+                </div>
+
+                <div class="float-chip float-chip-1"><span class="dot"></span>AI Recommendation: <strong>good time to buy</strong></div>
+                <div class="float-chip float-chip-2"><%- include('partials/icon', { icon: 'bell', size: 14 }) %>Target alert active</div>
+            </a>
+        <% } %>
+    </section>
+
+    <div class="section-head" id="categories">
+        <div>
+            <h2 class="section-title">Shop by category</h2>
+            <p class="section-sub">Every price tracked daily, with history and forecasts</p>
+        </div>
+    </div>
+
+    <div class="category-row">
+        <% categories.forEach(function (c) { %>
+            <a class="category-card" href="/category/<%= c.slug %>">
+                <span class="category-thumb"><img src="<%= c.thumb %>" alt=""></span>
+                <span class="category-name"><%= c.label %></span>
+            </a>
+        <% }) %>
+    </div>
+
+    <% if (drops.length > 0) { %>
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Biggest price drops this month</h2>
+                <p class="section-sub">Open any product to see its full price history and forecast</p>
+            </div>
+        </div>
+
+        <div class="products deals">
+            <% drops.forEach(function (p) { %>
+                <a class="deal-card" href="/product/<%= p.id %>">
+                    <div class="card-media stage">
+                        <span class="delta-pill delta-down">▼ <%= Math.abs(p.change30Pct).toFixed(1) %>%</span>
+                        <span class="round-btn round-btn-light card-corner" aria-hidden="true"><%- include('partials/icon', { icon: 'arrowUpRight', size: 16 }) %></span>
+                        <img src="/<%= p.image %>" alt="<%= p.name %>">
+                    </div>
+                    <div class="card-body">
+                        <span class="card-kicker"><%= p.meta.label %></span>
+                        <h3><%= p.name %></h3>
+                        <div class="price-row">
+                            <span class="price">₹<%= p.price.toLocaleString('en-IN') %></span>
+                        </div>
+                        <svg class="spark" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true">
+                            <polyline class="spark-line down" points="<%= p.spark %>"></polyline>
+                        </svg>
+                    </div>
+                </a>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <div class="section-head">
+        <div>
+            <h2 class="section-title">How it works</h2>
+            <p class="section-sub">Three tools to make sure you never overpay</p>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <span class="feature-num">01</span>
+            <div class="feature-icon"><%- include('partials/icon', { icon: 'bell', size: 22 }) %></div>
+            <h3>Smart Price Alert</h3>
+            <p>Set the price you want to pay. We alert you the moment a product reaches your target.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-num">02</span>
+            <div class="feature-icon"><%- include('partials/icon', { icon: 'trend', size: 22 }) %></div>
+            <h3>Price History</h3>
+            <p>See how a product's price has changed over time, with its lowest, highest and average price.</p>
+        </div>
+        <div class="feature-card">
+            <span class="feature-num">03</span>
+            <div class="feature-icon"><%- include('partials/icon', { icon: 'bot', size: 22 }) %></div>
+            <h3>AI Price Prediction</h3>
+            <p>Estimates future prices from historical data, including when your target price is likely to be hit.</p>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>

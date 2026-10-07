@@ -1,0 +1,77 @@
+<%
+    var navPath = typeof currentPath !== 'undefined' ? currentPath : '';
+    var navActive =
+        navPath === '/search' ? 'search' :
+        navPath === '/price-alerts' ? 'alerts' :
+        navPath === '/cart' ? 'cart' :
+        navPath === '/orders' ? 'orders' :
+        (navPath === '/' || navPath.indexOf('/category/') === 0 || navPath.indexOf('/product/') === 0) ? 'shop' : '';
+%>
+<header class="site-header<%= user ? '' : ' site-header-guest' %>">
+    <div class="header-inner">
+        <a class="brand" href="/" aria-label="Shopzy home"><%- include('logo') %></a>
+
+        <% if (user) { %>
+            <div class="user-chip">
+                <span class="avatar" aria-hidden="true"><%= (user.name || '?').trim().charAt(0).toUpperCase() %></span>
+                <div class="user-meta">
+                    <span class="user-name">Hi, <%= user.name %></span>
+                    <button type="button" class="location" onclick="changeLocation()" id="locationText" title="Change delivery location">
+                        <%- include('icon', { icon: 'pin', size: 12 }) %>
+                        <span class="small">Deliver to</span>
+                        <span class="city">Hyderabad 500039</span>
+                    </button>
+                </div>
+            </div>
+
+            <form class="search-box" action="/search" method="get" role="search">
+                <%- include('icon', { icon: 'search', size: 18 }) %>
+                <input type="search" id="search" name="q" placeholder="Search products, brands, categories"
+                       value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>" aria-label="Search products">
+                <button type="submit" aria-label="Search"><%- include('icon', { icon: 'arrowRight', size: 18 }) %></button>
+            </form>
+
+            <div class="header-actions">
+                <a class="header-alerts<%= navActive === 'alerts' ? ' is-active' : '' %>" href="/price-alerts" title="My price alerts">
+                    <%- include('icon', { icon: 'bell', size: 18 }) %>
+                    <span>Alerts</span>
+                    <span class="badge-count badge-alert" data-alert-badge hidden>0</span>
+                </a>
+                <button type="button" class="round-btn round-btn-text" onclick="changeLanguage()" id="language" title="Change language">ENG</button>
+                <button type="button" class="round-btn" onclick="logout()" title="Log out" aria-label="Log out"><%- include('icon', { icon: 'logout', size: 18 }) %></button>
+            </div>
+        <% } else { %>
+            <div class="nav-guest">
+                <a class="btn btn-ghost btn-link" href="/login">Log in</a>
+                <a class="btn btn-primary btn-link" href="/signup">Sign up</a>
+            </div>
+        <% } %>
+    </div>
+</header>
+
+<% if (user) { %>
+    <nav class="dock" aria-label="Main">
+        <a class="dock-item<%= navActive === 'shop' ? ' is-active' : '' %>" href="/"
+           aria-label="Shop" data-label="Shop" <%- navActive === 'shop' ? 'aria-current="page"' : '' %>>
+            <%- include('icon', { icon: 'home', size: 22 }) %>
+        </a>
+        <a class="dock-item<%= navActive === 'search' ? ' is-active' : '' %>" href="/search" data-dock-search
+           aria-label="Search" data-label="Search" <%- navActive === 'search' ? 'aria-current="page"' : '' %>>
+            <%- include('icon', { icon: 'search', size: 22 }) %>
+        </a>
+        <a class="dock-item<%= navActive === 'alerts' ? ' is-active' : '' %>" href="/price-alerts"
+           aria-label="Price alerts" data-label="Alerts" <%- navActive === 'alerts' ? 'aria-current="page"' : '' %>>
+            <%- include('icon', { icon: 'bell', size: 22 }) %>
+            <span class="badge-count badge-alert" data-alert-badge hidden>0</span>
+        </a>
+        <a class="dock-item<%= navActive === 'cart' ? ' is-active' : '' %>" href="/cart"
+           aria-label="Cart" data-label="Cart" <%- navActive === 'cart' ? 'aria-current="page"' : '' %>>
+            <%- include('icon', { icon: 'bag', size: 22 }) %>
+            <span id="cartCount" class="badge-count" hidden>0</span>
+        </a>
+        <a class="dock-item<%= navActive === 'orders' ? ' is-active' : '' %>" href="/orders"
+           aria-label="Orders and returns" data-label="Orders" <%- navActive === 'orders' ? 'aria-current="page"' : '' %>>
+            <%- include('icon', { icon: 'box', size: 22 }) %>
+        </a>
+    </nav>
+<% } %>

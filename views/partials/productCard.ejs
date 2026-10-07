@@ -1,0 +1,83 @@
+<%
+    var deltaClass = Math.abs(p.change30Pct) < 0.05 ? 'delta-flat' : (p.change30Pct < 0 ? 'delta-down' : 'delta-up');
+    var deltaArrow = Math.abs(p.change30Pct) < 0.05 ? '●' : (p.change30Pct < 0 ? '▼' : '▲');
+
+    // The visitor's own price alert on this product, if they set one.
+    // (Same labels as markAlertButtons() in main.js, which updates them live.)
+    var cardAlert = p.alert || null;
+    var targetText = cardAlert ? '₹' + cardAlert.target_price.toLocaleString('en-IN') : '';
+    var alertState = !cardAlert ? '' : (cardAlert.reached ? ' is-reached' : ' is-set');
+    var alertLabel = !cardAlert ? 'Set Price Alert' : (cardAlert.reached ? 'Target reached · ' + targetText : 'Alert at ' + targetText + ' · Edit');
+%>
+<article class="product-card">
+    <div class="card-media stage">
+        <% if (p.change30Pct <= -2) { %>
+            <span class="card-badge card-badge-deal">Price Drop</span>
+        <% } else if (p.rating === 5) { %>
+            <span class="card-badge card-badge-top">Top Rated</span>
+        <% } %>
+
+        <a href="/product/<%= p.id %>" class="card-media-link" aria-label="View price trend for <%= p.name %>">
+            <img src="/<%= p.image %>" alt="<%= p.name %>">
+        </a>
+    </div>
+
+    <div class="card-body">
+        <h2><a href="/product/<%= p.id %>" class="name-link"><%= p.name %></a></h2>
+        <p class="desc">
+            <%= p.description %>
+            <% if (p.rating) { %>
+                <span class="stars" role="img" aria-label="Rated <%= p.rating %> out of 5"><%= '★'.repeat(p.rating) + '☆'.repeat(5 - p.rating) %></span>
+            <% } %>
+        </p>
+
+        <div class="price-row">
+            <p class="price">₹<%= p.price.toLocaleString('en-IN') %></p>
+            <span class="delta-pill <%= deltaClass %>" title="Change over the last 30 days">
+                <%= deltaArrow %> <%= Math.abs(p.change30Pct).toFixed(1) %>% · 30d
+            </span>
+        </div>
+
+        <a href="/product/<%= p.id %>" class="spark-link" title="30-day price trend" aria-label="30-day price trend for <%= p.name %>">
+            <svg class="spark" viewBox="0 0 120 36" preserveAspectRatio="none" aria-hidden="true">
+                <polyline class="spark-line <%= p.change30Pct <= 0 ? 'down' : 'up' %>" points="<%= p.spark %>"></polyline>
+            </svg>
+        </a>
+
+        <div class="product-actions">
+            <button
+                type="button"
+                class="btn btn-outline"
+                data-add-to-cart
+                data-product-id="<%= p.id %>"
+                data-product-name="<%= p.name %>"
+            >
+                <%- include('icon', { icon: 'bag', size: 16 }) %>
+                Add to cart
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-accent"
+                data-buy-now
+                data-product-id="<%= p.id %>"
+                data-product-name="<%= p.name %>"
+            >
+                Buy now
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-alert<%= alertState %>"
+                data-price-alert
+                data-product-id="<%= p.id %>"
+                data-product-name="<%= p.name %>"
+                data-current-price="<%= p.price %>"
+                data-target-price="<%= cardAlert ? cardAlert.target_price : '' %>"
+            >
+                <%- include('icon', { icon: 'bell', size: 16 }) %>
+                <span data-alert-label><%= alertLabel %></span>
+            </button>
+        </div>
+    </div>
+</article>

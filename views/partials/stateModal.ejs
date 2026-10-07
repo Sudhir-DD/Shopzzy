@@ -1,0 +1,10 @@
+<%# Mascot pop-up for network errors, failed checkout and order success; filled in by showStateModal() in main.js %>
+<div class="modal-overlay" id="stateModal">
+    <div class="modal-card state-modal" role="dialog" aria-modal="true" aria-labelledby="stateModalTitle">
+        <button type="button" class="round-btn round-btn-sm modal-close" id="stateModalClose" aria-label="Close"><%- include('icon', { icon: 'close', size: 16 }) %></button>
+        <div class="state-modal-art"><%- include('mascot', { mood: 'happy', size: 150 }) %></div>
+        <h2 id="stateModalTitle"></h2>
+        <p class="state-modal-text" id="stateModalText"></p>
+        <div class="state-modal-actions" id="stateModalActions"></div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<%- include('partials/head', { title: (searchQuery ? searchQuery + ' - ' : '') + 'Search - Shopzy' }) %>
+<%- include('partials/header') %>
+
+<main class="page-wrap page-wide">
+    <div class="page-top">
+        <a class="round-btn" href="/" aria-label="Back to home"><%- include('partials/icon', { icon: 'arrowLeft', size: 20 }) %></a>
+    </div>
+
+    <p class="page-eyebrow">Search</p>
+    <h1 class="page-title">
+        <% if (searchQuery) { %>
+            Results for <span class="text-gradient">“<%= searchQuery %>”</span>
+        <% } else { %>
+            Find your next deal
+        <% } %>
+    </h1>
+
+    <% if (products.length > 0) { %>
+        <%- include('partials/sortBar', { count: products.length }) %>
+
+        <div class="products">
+            <% products.forEach(function (p) { %>
+                <%- include('partials/productCard', { p: p }) %>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <% if (searchQuery) { %>
+            <%- include('partials/state', {
+                mood: 'thinking',
+                title: 'Search No Results',
+                text: 'Nothing matched “' + searchQuery + '”. Try a brand like “Samsung” or a category below.',
+                prop: 'searchX',
+                actions: [{ label: 'Try a Different Search', href: '#search', attrs: 'data-focus-search' }]
+            }) %>
+        <% } else { %>
+            <%- include('partials/state', {
+                mood: 'happy',
+                title: 'What are we hunting for?',
+                text: 'Type a product, brand or category in the search bar, or browse a category below.',
+                prop: 'search',
+                actions: [{ label: 'Start Searching', href: '#search', attrs: 'data-focus-search' }]
+            }) %>
+        <% } %>
+
+        <div class="empty-search">
+            <div class="category-chips">
+                <% categories.forEach(function (c) { %>
+                    <a class="chip chip-thumb" href="/category/<%= c.slug %>"><img src="<%= c.thumb %>" alt=""><%= c.label %></a>
+                <% }) %>
+            </div>
+        </div>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>

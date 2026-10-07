@@ -1,0 +1,19 @@
+<%- include('partials/head', { title: 'Page Not Found - Shopzy' }) %>
+<%- include('partials/header') %>
+
+<main class="state-page">
+    <%- include('partials/state', {
+        heading: 'h1',
+        mood: 'confused',
+        accent: '404 –',
+        title: 'Page Not Found',
+        text: 'Looks like this page took a little detour…',
+        note: 'We couldn’t find ' + path,
+        deco: '404',
+        prop: 'cart',
+        actions: [{ label: 'Go Back Home', href: '/' }]
+    }) %>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>

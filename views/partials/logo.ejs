@@ -1,0 +1,16 @@
+<%
+    // Shopzy wordmark: include('partials/logo', { variant: 'lg', tagline: true })
+    var lVariant = typeof variant !== 'undefined' ? variant : 'md';
+    var lTagline = typeof tagline !== 'undefined' && tagline;
+%><span class="logo logo-<%= lVariant %>">
+    <span class="logo-row">
+        <svg class="logo-cart" viewBox="0 0 52 40" aria-hidden="true" focusable="false">
+            <path class="logo-speed" d="M2 13h8M0 19.5h9.5M3 26h8"/>
+            <path class="logo-basket" d="M10 5h6.5l5.4 24h18.6l4.5-16H18.4"/>
+            <circle class="logo-wheel-blue" cx="25" cy="35" r="3.2"/>
+            <circle class="logo-wheel-red" cx="38" cy="35" r="3.2"/>
+        </svg>
+        <span class="logo-word">Shopzy</span>
+    </span>
+    <% if (lTagline) { %><span class="logo-tagline">Shop smarter, not pricier.</span><% } %>
+</span>

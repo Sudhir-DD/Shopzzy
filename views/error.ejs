@@ -1,0 +1,31 @@
+<%- include('partials/head', { title: 'Something went wrong - Shopzy' }) %>
+<%- include('partials/header') %>
+
+<main class="state-page">
+    <% if (status === 500) { %>
+        <%- include('partials/state', {
+            heading: 'h1',
+            mood: 'sad',
+            title: 'Server Error (500)',
+            text: 'We’re fixing things on our end. Please try again later.',
+            prop: 'serverCrash',
+            actions: [
+                { label: 'Try Again', href: '', attrs: 'onclick="location.reload(); return false;"' },
+                { label: 'Go Back Home', href: '/' }
+            ]
+        }) %>
+    <% } else { %>
+        <%- include('partials/state', {
+            heading: 'h1',
+            mood: 'confused',
+            accent: status + ' –',
+            title: 'Invalid Request',
+            text: 'Hmm… we couldn’t understand that request.',
+            prop: 'help',
+            actions: [{ label: 'Go Back Home', href: '/' }]
+        }) %>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>

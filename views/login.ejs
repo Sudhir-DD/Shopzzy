@@ -1,0 +1,98 @@
+<%- include('partials/head', { title: 'Login - Shopzy' }) %>
+<%- include('partials/header') %>
+
+<%
+    // Sent here from a page that needs an account (e.g. /login?next=/cart)
+    var loginRequired = Boolean(next) && next !== '/';
+%>
+<main class="auth-page">
+    <%- include('partials/authVisual', { loginRequired: loginRequired }) %>
+
+    <div class="auth-box">
+        <div class="auth-mascot"><%- include('partials/mascot', { mood: loginRequired ? 'wink' : 'happy', headOnly: true, size: 110 }) %></div>
+        <h1><%= loginRequired ? 'Login Required' : 'Welcome back' %></h1>
+        <p class="form-hint">
+            <%= loginRequired ? 'You’ll need to log in first. ' : '' %>Enter your mobile number and we'll text you a one-time code.
+        </p>
+
+        <div class="auth-step">
+            <input type="tel" id="mobile" placeholder="10-digit mobile number" pattern="[0-9]{10}" maxlength="10"
+                   inputmode="numeric" autocomplete="tel-national" aria-label="Mobile number" required>
+            <button class="btn btn-primary" type="button" id="sendOtpBtn">Send OTP</button>
+        </div>
+
+        <div class="auth-step">
+            <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6" inputmode="numeric"
+                   autocomplete="one-time-code" aria-label="One-time code" disabled>
+            <button class="btn btn-primary" type="button" id="verifyOtpBtn" disabled>Verify &amp; Login</button>
+        </div>
+
+        <p class="form-message" id="loginMessage" role="status"></p>
+
+        <div class="auth-divider"></div>
+        <div class="auth-links auth-links-center">
+            <span class="muted">New here?</span>
+            <a href="/signup">Create an account</a>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>
+
+<script>
+    const nextUrl = <%- JSON.stringify(next || '/').replace(/</g, '\\u003c') %>;
+    const messageEl = document.getElementById('loginMessage');
+    const authPage = document.querySelector('.auth-page');
+
+    function setMessage(text, ok) {
+        messageEl.className = 'form-message ' + (ok ? 'success' : 'error');
+        messageEl.textContent = text;
+    }
+
+    document.getElementById('sendOtpBtn').addEventListener('click', function () {
+        const mobile = document.getElementById('mobile').value.trim();
+
+        api('/api/auth/login/request-otp', { method: 'POST', body: { mobile: mobile } })
+            .then(function (data) {
+                setMessage('OTP sent to your mobile.', true);
+                setMascot(authPage, 'wink', 'Code sent! Pop it in below.');
+                document.getElementById('otpInput').disabled = false;
+                document.getElementById('verifyOtpBtn').disabled = false;
+
+                if (data.demoOtp) {
+                    showToast('Demo OTP: ' + data.demoOtp);
+                }
+            })
+            .catch(function (err) {
+                setMessage(err.message, false);
+                reactToAuthError(authPage, err.message);
+            });
+    });
+
+    document.getElementById('verifyOtpBtn').addEventListener('click', function () {
+        const mobile = document.getElementById('mobile').value.trim();
+        const otp = document.getElementById('otpInput').value.trim();
+
+        api('/api/auth/login/verify-otp', { method: 'POST', body: { mobile: mobile, otp: otp } })
+            .then(function (data) {
+                setMessage('', true);
+                setMascot(authPage, 'excited', 'Nice! You’re all set!');
+                showToast('Login successful! Welcome ' + data.user.name);
+                window.location.href = nextUrl;
+            })
+            .catch(function (err) {
+                setMessage(err.message, false);
+                reactToAuthError(authPage, err.message);
+            });
+    });
+
+    // Enter in a field triggers that step's button.
+    [['mobile', 'sendOtpBtn'], ['otpInput', 'verifyOtpBtn']].forEach(function (pair) {
+        document.getElementById(pair[0]).addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                document.getElementById(pair[1]).click();
+            }
+        });
+    });
+</script>

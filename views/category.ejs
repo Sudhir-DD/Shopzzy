@@ -1,0 +1,25 @@
+<%- include('partials/head', { title: meta.label + ' - Shopzy' }) %>
+<%- include('partials/header') %>
+
+<main class="page-wrap page-wide">
+    <div class="page-top">
+        <a class="round-btn" href="/" aria-label="Back to home"><%- include('partials/icon', { icon: 'arrowLeft', size: 20 }) %></a>
+        <a class="pill-link" href="/category/<%= nextSlug %>">
+            Next: <%= nextMeta.label %> <%- include('partials/icon', { icon: 'arrowRight', size: 16 }) %>
+        </a>
+    </div>
+
+    <p class="page-eyebrow">Category</p>
+    <h1 class="page-title"><%= meta.label %></h1>
+
+    <%- include('partials/sortBar', { count: products.length }) %>
+
+    <div class="products">
+        <% products.forEach(function (p) { %>
+            <%- include('partials/productCard', { p: p }) %>
+        <% }) %>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>

@@ -1,0 +1,126 @@
+<%- include('partials/head', { title: product.name + ' - Price Trend & Alerts - Shopzy' }) %>
+<%- include('partials/header') %>
+
+<main class="pd-wrap">
+    <div class="page-top">
+        <a class="round-btn" href="/category/<%= product.category %>" aria-label="Back to <%= meta.label %>"><%- include('partials/icon', { icon: 'arrowLeft', size: 20 }) %></a>
+        <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span>/</span>
+            <a href="/category/<%= product.category %>"><%= meta.label %></a>
+            <span>/</span>
+            <span class="current"><%= product.name %></span>
+        </nav>
+    </div>
+
+    <section class="pd-top">
+        <div class="pd-image panel">
+            <div class="scan-frame">
+                <span class="corner corner-tl"></span>
+                <span class="corner corner-tr"></span>
+                <span class="corner corner-bl"></span>
+                <span class="corner corner-br"></span>
+                <div class="pd-stage stage">
+                    <img src="/<%= product.image %>" alt="<%= product.name %>">
+                </div>
+                <span class="scan-line" aria-hidden="true"></span>
+            </div>
+            <p class="scan-caption"><span class="live-dot"></span>AI is tracking this price around the clock</p>
+        </div>
+
+        <div class="pd-info stage-card">
+            <div class="pd-info-top">
+                <span class="tag"><%= meta.label %></span>
+                <a class="round-btn round-btn-light" href="#alertPanel" aria-label="Set a price alert" title="Set a price alert"><%- include('partials/icon', { icon: 'bell', size: 18 }) %></a>
+            </div>
+
+            <h1><%= product.name %></h1>
+            <p class="desc">
+                <%= product.description %>
+                <% if (product.rating) { %>
+                    &nbsp;·&nbsp;<span class="stars" role="img" aria-label="Rated <%= product.rating %> out of 5"><%= '★'.repeat(product.rating) + '☆'.repeat(5 - product.rating) %></span>
+                <% } %>
+            </p>
+
+            <div class="pd-price-row">
+                <span class="pd-price" id="pdPrice">₹<%= product.price.toLocaleString('en-IN') %></span>
+                <span class="delta-pill" id="pdDelta" hidden></span>
+            </div>
+
+            <div class="verdict" id="pdVerdict" hidden></div>
+
+            <div class="product-actions pd-actions">
+                <button type="button" class="btn btn-outline" data-add-to-cart
+                        data-product-id="<%= product.id %>" data-product-name="<%= product.name %>"><%- include('partials/icon', { icon: 'bag', size: 18 }) %> Add to cart</button>
+                <button type="button" class="btn btn-accent" data-buy-now
+                        data-product-id="<%= product.id %>" data-product-name="<%= product.name %>">Buy now</button>
+                <a class="btn btn-alert" id="pdAlertLink" href="#alertPanel">
+                    <%- include('partials/icon', { icon: 'bell', size: 18 }) %>
+                    <span data-alert-label>Set Price Alert</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="pd-grid">
+        <div class="panel chart-panel">
+            <div class="panel-head">
+                <h2>Price Trend</h2>
+                <div class="range-tabs" id="rangeTabs" role="tablist" aria-label="History range">
+                    <button type="button" data-days="7">7D</button>
+                    <button type="button" data-days="30">30D</button>
+                    <button type="button" class="active" data-days="90">90D</button>
+                </div>
+            </div>
+
+            <div class="chart" id="chart" aria-live="polite">
+                <p class="muted chart-loading">Loading price history…</p>
+            </div>
+
+            <div class="legend" id="chartLegend"></div>
+            <div class="stats-row" id="statsRow"></div>
+        </div>
+
+        <aside class="side">
+            <div class="panel alert-panel" id="alertPanel">
+                <div class="panel-head">
+                    <h2>Smart Price Alert</h2>
+                    <span class="status-pill off" id="alertPill">Price Alert: OFF</span>
+                </div>
+
+                <p class="muted" id="alertLead">Get notified the moment this product reaches your target price.</p>
+
+                <div class="target-input">
+                    <span class="currency">₹</span>
+                    <input type="number" id="targetInput" min="1" step="1" inputmode="numeric" placeholder="Your target price"
+                           aria-label="Target price">
+                </div>
+
+                <div class="chips" id="targetChips"></div>
+                <p class="muted small" id="targetPreview"></p>
+
+                <div class="alert-buttons">
+                    <button type="button" class="btn btn-primary" id="alertSave">Set alert</button>
+                    <button type="button" class="btn btn-ghost" id="alertOff" hidden>Turn off</button>
+                </div>
+            </div>
+
+            <div class="panel ai-panel" id="aiPanel">
+                <div class="panel-head">
+                    <h2><%- include('partials/icon', { icon: 'scan', size: 18 }) %> AI Price Prediction</h2>
+                    <span class="conf-pill" id="aiConf" hidden></span>
+                </div>
+                <div id="aiBody"><p class="muted ai-loading">Please wait a few seconds, we are analysing the price history…</p></div>
+                <p class="disclaimer" id="aiNote"></p>
+            </div>
+        </aside>
+    </section>
+</main>
+
+<%- include('partials/footer') %>
+<%- include('partials/foot') %>
+
+<script>
+    window.PRODUCT = <%- JSON.stringify({ id: product.id, name: product.name, price: product.price }).replace(/</g, '\\u003c') %>;
+</script>
+<script src="/public/js/product.js"></script>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000010">
+    <meta name="color-scheme" content="dark">
+    <title><%= typeof title !== 'undefined' ? title : 'Shopzy' %></title>
+    <link rel="icon" href="/public/img/shopzy-icon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body class="<%= typeof user !== 'undefined' && user ? 'has-dock' : 'is-guest' %>">
+    <%# Animated ShaderGradient background (public/js/shader-background.js draws into it) %>
+    <div class="shader-bg" id="shaderBg" aria-hidden="true"></div>

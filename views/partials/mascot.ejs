@@ -1,0 +1,102 @@
+<%
+    // Shopzy, the mascot: include('partials/mascot', { mood: 'sad', size: 180 })
+    //   mood: neutral | happy | excited | thinking | sad | surprised | angry | wink | confused
+    //   pose: 'idle' (default) or 'wave';  headOnly: true crops to the head.
+    // Every face is in the SVG and CSS shows the one matching data-mood, so
+    // client code can change the expression by setting that attribute.
+    var mMood = typeof mood !== 'undefined' ? mood : 'neutral';
+    var mSize = typeof size !== 'undefined' ? size : 180;
+    var mHeadOnly = typeof headOnly !== 'undefined' && headOnly;
+    var mPose = typeof pose !== 'undefined' ? pose : 'idle';
+    var mViewBox = mHeadOnly ? '18 0 166 118' : '0 0 200 232';
+    var mHeight = Math.round(mSize * (mHeadOnly ? 118 / 166 : 232 / 200));
+
+    // Face features are drawn twice: a wide soft stroke (the screen glow) under a crisp one.
+    function line(d) {
+        return '<path class="mf-glow" d="' + d + '"/><path class="mf-line" d="' + d + '"/>';
+    }
+    function eye(cx, cy, rx, ry) {
+        return '<ellipse class="mf-halo" cx="' + cx + '" cy="' + cy + '" rx="' + (rx + 3.5) + '" ry="' + (ry + 3.5) + '"/>' +
+               '<ellipse class="mf-fill" cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '"/>';
+    }
+    function star(cx, cy) {
+        return '<path class="mf-star" transform="translate(' + cx + ' ' + cy + ')" d="M0 -10.5L2.8 -3.8L10 -3.2L4.5 1.5L6.2 8.5L0 4.7L-6.2 8.5L-4.5 1.5L-10 -3.2L-2.8 -3.8Z"/>';
+    }
+
+    var faces = {
+        neutral: '<g class="mf-eyes">' + eye(80, 66, 6.5, 8.5) + eye(120, 66, 6.5, 8.5) + '</g>' + line('M92 83 Q100 89 108 83'),
+        happy: '<g class="mf-eyes">' + line('M71 70 Q80 58 89 70') + line('M111 70 Q120 58 129 70') + '</g>' + line('M89 82 Q100 92 111 82'),
+        excited: '<g class="mf-eyes">' + star(80, 65) + star(120, 65) + '</g>' +
+                 '<path class="mf-glow" d="M88 80 Q100 96 112 80 Z"/><path class="mf-fill" d="M88 80 Q100 96 112 80 Z"/>',
+        thinking: '<g class="mf-eyes">' + eye(83, 62, 5.5, 7) + eye(123, 62, 5.5, 7) + '</g>' +
+                  line('M113 49 Q121 45 130 49') + line('M92 86 Q99 83 108 85'),
+        sad: '<g class="mf-eyes">' + eye(80, 68, 6, 7) + eye(120, 68, 6, 7) + '</g>' +
+             line('M70 55 L88 50') + line('M130 55 L112 50') + line('M90 90 Q100 82 110 90') +
+             '<path class="mf-tear" d="M75 78 q-3.5 6 0 8.5 q3.5 -2.5 0 -8.5 Z"/>',
+        surprised: '<g class="mf-eyes">' + line('M71.5 65 a8.5 8.5 0 1 0 17 0 a8.5 8.5 0 1 0 -17 0') +
+                   line('M111.5 65 a8.5 8.5 0 1 0 17 0 a8.5 8.5 0 1 0 -17 0') + '</g>' +
+                   line('M95.5 87 a4.5 4.5 0 1 0 9 0 a4.5 4.5 0 1 0 -9 0'),
+        angry: '<g class="mf-eyes">' + eye(81, 67, 6.5, 5) + eye(119, 67, 6.5, 5) + '</g>' +
+               line('M70 52 L89 59') + line('M130 52 L111 59') + line('M90 89 Q100 82 110 89'),
+        wink: '<g class="mf-eyes">' + eye(80, 66, 6.5, 8.5) + line('M127 59 L116 66 L127 73') + '</g>' +
+              line('M88 82 Q100 92 112 82'),
+        confused: '<g class="mf-eyes">' + eye(80, 66, 6, 8) + line('M112 66 L128 68') + '</g>' +
+                  line('M71 52 Q80 48 89 52') + line('M88 87 Q92 83 96 87 Q100 91 104 87 Q108 83 112 87') +
+                  '<path class="mf-question" d="M166 13 Q166 6 173 6 Q180 6 180 12.5 Q180 17 175 19 Q173 20 173 24"/>' +
+                  '<circle class="mf-question-dot" cx="173" cy="30" r="2.2"/>'
+    };
+%><svg class="mascot<%= mHeadOnly ? ' mascot-head' : '' %>" data-mood="<%= mMood %>" width="<%= mSize %>" height="<%= mHeight %>" viewBox="<%= mViewBox %>" aria-hidden="true" focusable="false">
+    <% if (!mHeadOnly) { %>
+        <ellipse class="m-shadow" cx="100" cy="222" rx="52" ry="6"/>
+
+        <!-- legs + sneakers -->
+        <rect class="m-dark" x="75" y="178" width="21" height="28" rx="8"/>
+        <rect class="m-dark" x="104" y="178" width="21" height="28" rx="8"/>
+        <rect class="m-shoe" x="63" y="202" width="37" height="15" rx="7.5"/>
+        <rect class="m-shoe" x="100" y="202" width="37" height="15" rx="7.5"/>
+        <path class="m-red" d="M70.5 202 h8 v15 h-8 a7.5 7.5 0 0 1 0 -15 Z"/>
+        <path class="m-red" d="M129.5 202 h-8 v15 h8 a7.5 7.5 0 0 0 0 -15 Z"/>
+        <rect class="m-sole" x="63" y="213" width="37" height="4" rx="2"/>
+        <rect class="m-sole" x="100" y="213" width="37" height="4" rx="2"/>
+
+        <!-- arms (behind the hoodie) -->
+        <path class="m-sleeve" d="M69 128 C57 134 51 149 50 162"/>
+        <circle class="m-dark" cx="50" cy="167" r="10.5"/>
+        <% if (mPose === 'wave') { %>
+            <path class="m-sleeve" d="M131 128 C149 127 165 119 176 108"/>
+            <circle class="m-dark" cx="180" cy="103" r="10.5"/>
+        <% } else { %>
+            <path class="m-sleeve" d="M131 128 C143 134 149 149 150 162"/>
+            <circle class="m-dark" cx="150" cy="167" r="10.5"/>
+        <% } %>
+
+        <!-- hoodie -->
+        <path class="m-red" d="M66 128 C66 118 76 111 88 111 H112 C124 111 134 118 134 128 L140 176 C141 184 135 190 127 190 H73 C65 190 59 184 60 176 Z"/>
+        <path class="m-red-dark" d="M62 181 H138 V184 C138 188 135 191 131 191 H69 C65 191 62 188 62 184 Z"/>
+        <path class="m-red-dark" d="M79 161 H121 L125 179 H75 Z"/>
+        <path class="m-red-light" d="M70 130 C70 122 76 117 84 116" fill="none" stroke-width="4" stroke-linecap="round"/>
+        <path class="m-collar" d="M80 113 Q100 129 120 113"/>
+        <path class="m-string" d="M93 121 v12 M107 121 v12"/>
+        <g class="m-logo" transform="translate(88.5 135)">
+            <path d="M0 1.5h2.3l2.9 12.6a2 2 0 0 0 2 1.6h10.1a2 2 0 0 0 2-1.6l1.8-8H4.4"/>
+            <circle cx="8.3" cy="20" r="1.4"/>
+            <circle cx="18" cy="20" r="1.4"/>
+        </g>
+    <% } %>
+
+    <!-- head: neck, headphone band, casing, red hood, screen, ear cups -->
+    <rect class="m-dark" x="90" y="104" width="20" height="10"/>
+    <path class="m-band" d="M35 64 C35 14 165 14 165 64"/>
+    <rect class="m-casing" x="40" y="20" width="120" height="92" rx="28"/>
+    <path class="m-red" d="M40 54 V48 C40 32 53 20 68 20 H132 C147 20 160 32 160 48 V54 C138 41 62 41 40 54 Z"/>
+    <rect class="m-screen" x="49" y="35" width="102" height="69" rx="20"/>
+    <path class="m-sheen" d="M58 46 Q70 38 92 38"/>
+    <rect class="m-cup" x="25" y="50" width="20" height="40" rx="9"/>
+    <rect class="m-cup" x="155" y="50" width="20" height="40" rx="9"/>
+    <rect class="m-pad" x="30" y="57" width="7" height="26" rx="3.5"/>
+    <rect class="m-pad" x="163" y="57" width="7" height="26" rx="3.5"/>
+
+    <% Object.keys(faces).forEach(function (key) { %>
+        <g class="face face-<%= key %>"><%- faces[key] %></g>
+    <% }) %>
+</svg>

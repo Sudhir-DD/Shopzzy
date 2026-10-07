@@ -1,0 +1,17 @@
+<%
+    // Left side of the login / sign-up pages: the mascot says hello, or explains
+    // that the page the visitor asked for needs a login. Its bubble and face also
+    // react to form errors (setMascot / reactToAuthError in main.js).
+    var avLoginRequired = typeof loginRequired !== 'undefined' && loginRequired;
+%>
+<aside class="auth-visual">
+    <div class="auth-hero">
+        <p class="mascot-bubble" data-mascot-says><%= avLoginRequired ? 'You’ll need to log in first.' : 'Hey! I’m Shopzy!' %></p>
+        <%- include('mascot', { mood: avLoginRequired ? 'wink' : 'happy', pose: 'wave', size: 230 }) %>
+        <% if (avLoginRequired) { %>
+            <span class="state-prop auth-prop" aria-hidden="true"><%- include('icon', { icon: 'lock', size: 52 }) %></span>
+        <% } %>
+    </div>
+    <%- include('logo', { variant: 'lg', tagline: true }) %>
+    <p class="auth-visual-sub">Your shopping buddy, here to make online shopping smooth, fun and completely stress-free.</p>
+</aside>
