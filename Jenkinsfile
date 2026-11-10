@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -12,15 +13,23 @@ pipeline {
             }
         }
 
+        stage('Check Tools') {
+            steps {
+                bat 'node --version'
+                bat 'npm --version'
+                bat 'docker --version'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                sh 'npm ci'
+                bat 'npm ci'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest ."
+                bat "docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} -t ${IMAGE_NAME}:latest ."
             }
         }
     }
